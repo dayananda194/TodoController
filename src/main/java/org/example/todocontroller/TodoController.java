@@ -3,10 +3,7 @@ package org.example.todocontroller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +30,19 @@ public class TodoController {
 
             todoList.add(newTodo);
             return new ResponseEntity<>(newTodo,HttpStatus.CREATED);
+    }
+    @GetMapping("/todos/{userId}")
+    public ResponseEntity<?> getTodo(@PathVariable int userId) {
+        List<Todo> reqTodos = new ArrayList<>();
+        for (Todo todo : todoList) {
+            if (todo.getUserId() == userId) {
+                    reqTodos.add(todo);
+            }
+        }
+        if(reqTodos.isEmpty()) {
+            return new ResponseEntity<>("There were no Todos for with userId "+userId ,HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(reqTodos, HttpStatus.OK);
     }
 
 }
